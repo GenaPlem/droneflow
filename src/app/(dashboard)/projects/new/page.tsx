@@ -12,7 +12,7 @@ export default function NewProjectPage() {
 
       <Card className="max-w-2xl">
         <CardContent className="pt-6">
-          <ProjectForm />
+          <ProjectForm submitLabel="Create Project" />
         </CardContent>
       </Card>
     </div>

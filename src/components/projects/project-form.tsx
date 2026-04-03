@@ -1,5 +1,6 @@
 "use client";
 
+import { useTransition } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 
@@ -23,12 +24,16 @@ import { Textarea } from "@/components/ui/textarea";
 type ProjectFormProps = {
   defaultValues?: Partial<ProjectFormValues>;
   submitLabel?: string;
+  onSubmitAction: (values: ProjectFormValues) => Promise<void>;
 };
 
 export function ProjectForm({
   defaultValues,
   submitLabel = "Save Project",
+  onSubmitAction,
 }: ProjectFormProps) {
+  const [isPending, startTransition] = useTransition();
+
   const form = useForm<ProjectFormValues>({
     resolver: zodResolver(projectFormSchema),
     defaultValues: {
@@ -40,7 +45,9 @@ export function ProjectForm({
   });
 
   function onSubmit(values: ProjectFormValues) {
-    console.log("Form submitted:", values);
+    startTransition(async () => {
+      await onSubmitAction(values);
+    });
   }
 
   return (
@@ -102,8 +109,8 @@ export function ProjectForm({
           )}
         />
 
-        <Button type="submit" className="w-full">
-          {submitLabel}
+        <Button type="submit" className="w-full" disabled={isPending}>
+          {isPending ? "Saving..." : submitLabel}
         </Button>
       </form>
     </Form>

@@ -3,9 +3,11 @@ import { Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { PageHeader } from "@/components/shared/page-header";
 import { ProjectCard } from "@/components/projects/project-card";
-import { mockProjects } from "@/lib/mock-data";
+import { getProjects } from "@/lib/db/projects";
 
-export default function ProjectsPage() {
+export default async function ProjectsPage() {
+  const projects = await getProjects();
+
   return (
     <div className="space-y-8 p-6">
       <PageHeader
@@ -21,11 +23,17 @@ export default function ProjectsPage() {
         }
       />
 
-      <div className="grid gap-4 lg:grid-cols-2 xl:grid-cols-3">
-        {mockProjects.map((project) => (
-          <ProjectCard key={project.id} project={project} />
-        ))}
-      </div>
+      {projects.length > 0 ? (
+        <div className="grid gap-4 lg:grid-cols-2 xl:grid-cols-3">
+          {projects.map((project) => (
+            <ProjectCard key={project.id} project={project} />
+          ))}
+        </div>
+      ) : (
+        <div className="rounded-2xl border border-dashed p-8 text-sm text-muted-foreground">
+          No projects yet. Create your first drone project to get started.
+        </div>
+      )}
     </div>
   );
 }

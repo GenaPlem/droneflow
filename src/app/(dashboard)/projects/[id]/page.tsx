@@ -2,9 +2,10 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { PageHeader } from "@/components/shared/page-header";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { StatusBadge } from "@/components/projects/status-badge";
-import { mockProjects } from "@/lib/mock-data";
+import { Button } from "@/components/ui/button";
+import { getProjectById } from "@/lib/db/projects";
+import { formatDate } from "@/lib/utils/format-date";
 
 type ProjectDetailsPageProps = {
   params: Promise<{
@@ -17,7 +18,7 @@ export default async function ProjectDetailsPage({
 }: ProjectDetailsPageProps) {
   const { id } = await params;
 
-  const project = mockProjects.find((item) => item.id === id);
+  const project = await getProjectById(id);
 
   if (!project) {
     notFound();
@@ -27,9 +28,7 @@ export default async function ProjectDetailsPage({
     <div className="space-y-10 p-6">
       <PageHeader
         title={project.title}
-        description={`${project.location} • ${
-          project.shootDate ?? "No shoot date yet"
-        }`}
+        description={`${project.location} • ${formatDate(project.shootDate)}`}
         action={
           <div className="flex items-center gap-3">
             <StatusBadge status={project.status} />
@@ -64,7 +63,7 @@ export default async function ProjectDetailsPage({
                 Shoot Date
               </p>
               <p className="mt-2 text-sm font-medium text-foreground">
-                {project.shootDate ?? "Not set"}
+                {formatDate(project.shootDate)}
               </p>
             </div>
 

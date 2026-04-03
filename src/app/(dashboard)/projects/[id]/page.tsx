@@ -6,6 +6,7 @@ import { StatusBadge } from "@/components/projects/status-badge";
 import { Button } from "@/components/ui/button";
 import { getProjectById } from "@/lib/db/projects";
 import { formatDate } from "@/lib/utils/format-date";
+import { ArchiveProjectButton } from "@/components/projects/archive-project-button";
 
 type ProjectDetailsPageProps = {
   params: Promise<{
@@ -32,7 +33,7 @@ export default async function ProjectDetailsPage({
         action={
           <div className="flex items-center gap-3">
             <StatusBadge status={project.status} />
-            <Button variant="outline">Archive</Button>
+            <ArchiveProjectButton projectId={project.id} />
             <Button asChild>
               <Link href={`/projects/${project.id}/edit`}>Edit Project</Link>
             </Button>

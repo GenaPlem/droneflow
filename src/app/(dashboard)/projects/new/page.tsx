@@ -1,9 +1,6 @@
 import { PageHeader } from "@/components/shared/page-header";
+import { ProjectForm } from "@/components/projects/project-form";
 import { Card, CardContent } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
-import { Button } from "@/components/ui/button";
 
 export default function NewProjectPage() {
   return (
@@ -14,28 +11,8 @@ export default function NewProjectPage() {
       />
 
       <Card className="max-w-2xl">
-        <CardContent className="space-y-6 pt-6">
-          <div className="space-y-2">
-            <Label>Title</Label>
-            <Input placeholder="Luxury Villa Shoot" />
-          </div>
-
-          <div className="space-y-2">
-            <Label>Location</Label>
-            <Input placeholder="Dublin, Ireland" />
-          </div>
-
-          <div className="space-y-2">
-            <Label>Description</Label>
-            <Textarea placeholder="Describe the project..." />
-          </div>
-
-          <div className="space-y-2">
-            <Label>Shoot Date</Label>
-            <Input type="date" />
-          </div>
-
-          <Button className="w-full">Create Project</Button>
+        <CardContent className="pt-6">
+          <ProjectForm />
         </CardContent>
       </Card>
     </div>

@@ -1,45 +1,111 @@
 "use client";
 
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
-import { Button } from "@/components/ui/button";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
 
-type ProjectFormValues = {
-  title: string;
-  location: string;
-  description?: string;
-  shootDate?: string;
-};
+import {
+  projectFormSchema,
+  type ProjectFormValues,
+} from "@/lib/validations/project";
+
+import { Button } from "@/components/ui/button";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 
 type ProjectFormProps = {
-  defaultValues?: ProjectFormValues;
+  defaultValues?: Partial<ProjectFormValues>;
+  submitLabel?: string;
 };
 
-export function ProjectForm({ defaultValues }: ProjectFormProps) {
+export function ProjectForm({
+  defaultValues,
+  submitLabel = "Save Project",
+}: ProjectFormProps) {
+  const form = useForm<ProjectFormValues>({
+    resolver: zodResolver(projectFormSchema),
+    defaultValues: {
+      title: defaultValues?.title ?? "",
+      location: defaultValues?.location ?? "",
+      description: defaultValues?.description ?? "",
+      shootDate: defaultValues?.shootDate ?? "",
+    },
+  });
+
+  function onSubmit(values: ProjectFormValues) {
+    console.log("Form submitted:", values);
+  }
+
   return (
-    <div className="space-y-6">
-      <div className="space-y-2">
-        <Label>Title</Label>
-        <Input defaultValue={defaultValues?.title} />
-      </div>
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+        <FormField
+          control={form.control}
+          name="title"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Title</FormLabel>
+              <FormControl>
+                <Input placeholder="Luxury Villa Shoot" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
-      <div className="space-y-2">
-        <Label>Location</Label>
-        <Input defaultValue={defaultValues?.location} />
-      </div>
+        <FormField
+          control={form.control}
+          name="location"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Location</FormLabel>
+              <FormControl>
+                <Input placeholder="Dublin, Ireland" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
-      <div className="space-y-2">
-        <Label>Description</Label>
-        <Textarea defaultValue={defaultValues?.description} />
-      </div>
+        <FormField
+          control={form.control}
+          name="description"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Description</FormLabel>
+              <FormControl>
+                <Textarea placeholder="Describe the project..." {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
-      <div className="space-y-2">
-        <Label>Shoot Date</Label>
-        <Input type="date" defaultValue={defaultValues?.shootDate} />
-      </div>
+        <FormField
+          control={form.control}
+          name="shootDate"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Shoot Date</FormLabel>
+              <FormControl>
+                <Input type="date" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
-      <Button className="w-full">Save Project</Button>
-    </div>
+        <Button type="submit" className="w-full">
+          {submitLabel}
+        </Button>
+      </form>
+    </Form>
   );
 }

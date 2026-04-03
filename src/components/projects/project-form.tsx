@@ -109,7 +109,12 @@ export function ProjectForm({
           )}
         />
 
-        <Button type="submit" className="w-full" disabled={isPending}>
+        <Button
+          type="submit"
+          className="w-full cursor-pointer"
+          disabled={isPending}
+          variant="default"
+        >
           {isPending ? "Saving..." : submitLabel}
         </Button>
       </form>

@@ -9,3 +9,13 @@ export async function getProjects() {
     },
   });
 }
+
+export async function getProjectById(id: string) {
+  return prisma.project.findUnique({
+    where: { id },
+    include: {
+      shots: true,
+      media: true,
+    },
+  });
+}

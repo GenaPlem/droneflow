@@ -2,7 +2,8 @@ import { notFound } from "next/navigation";
 import { PageHeader } from "@/components/shared/page-header";
 import { Card, CardContent } from "@/components/ui/card";
 import { ProjectForm } from "@/components/projects/project-form";
-import { mockProjects } from "@/lib/mock-data";
+import { getProjectById } from "@/lib/db/projects";
+import { updateProjectAction } from "@/app/(dashboard)/projects/actions";
 
 type EditProjectPageProps = {
   params: Promise<{
@@ -15,7 +16,7 @@ export default async function EditProjectPage({
 }: EditProjectPageProps) {
   const { id } = await params;
 
-  const project = mockProjects.find((item) => item.id === id);
+  const project = await getProjectById(id);
 
   if (!project) {
     notFound();
@@ -35,9 +36,12 @@ export default async function EditProjectPage({
             defaultValues={{
               title: project.title,
               location: project.location,
-              description: project.description,
-              shootDate: project.shootDate,
+              description: project.description ?? "",
+              shootDate: project.shootDate
+                ? new Date(project.shootDate).toISOString().split("T")[0]
+                : "",
             }}
+            onSubmitAction={updateProjectAction.bind(null, project.id)}
           />
         </CardContent>
       </Card>

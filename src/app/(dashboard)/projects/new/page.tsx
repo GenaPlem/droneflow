@@ -1,6 +1,7 @@
 import { PageHeader } from "@/components/shared/page-header";
-import { ProjectForm } from "@/components/projects/project-form";
 import { Card, CardContent } from "@/components/ui/card";
+import { ProjectForm } from "@/components/projects/project-form";
+import { createProjectAction } from "@/app/(dashboard)/projects/actions";
 
 export default function NewProjectPage() {
   return (
@@ -12,7 +13,10 @@ export default function NewProjectPage() {
 
       <Card className="max-w-2xl">
         <CardContent className="pt-6">
-          <ProjectForm submitLabel="Create Project" />
+          <ProjectForm
+            submitLabel="Create Project"
+            onSubmitAction={createProjectAction}
+          />
         </CardContent>
       </Card>
     </div>

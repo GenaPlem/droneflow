@@ -4,21 +4,24 @@ import { Button } from "@/components/ui/button";
 import { PageHeader } from "@/components/shared/page-header";
 import { StatCard } from "@/components/dashboard/stat-card";
 import { ProjectCard } from "@/components/projects/project-card";
-import { mockProjects } from "@/lib/mock-data";
+import { getProjects } from "@/lib/db/projects";
+import { formatDate } from "@/lib/utils/format-date";
 
-export default function DashboardPage() {
-  const totalProjects = mockProjects.length;
-  const readyToShoot = mockProjects.filter(
+export default async function DashboardPage() {
+  const projects = await getProjects();
+
+  const totalProjects = projects.length;
+  const readyToShoot = projects.filter(
     (project) => project.status === "ready_to_shoot"
   ).length;
-  const inEditing = mockProjects.filter(
+  const inEditing = projects.filter(
     (project) => project.status === "editing"
   ).length;
-  const delivered = mockProjects.filter(
+  const delivered = projects.filter(
     (project) => project.status === "delivered"
   ).length;
 
-  const upcomingShoots = mockProjects.filter(
+  const upcomingShoots = projects.filter(
     (project) => !!project.shootDate && !project.archived
   );
 
@@ -53,7 +56,7 @@ export default function DashboardPage() {
           </div>
 
           <div className="grid gap-4 lg:grid-cols-2">
-            {mockProjects.map((project) => (
+            {projects.map((project) => (
               <ProjectCard key={project.id} project={project} />
             ))}
           </div>
@@ -76,7 +79,7 @@ export default function DashboardPage() {
                     {project.location}
                   </p>
                   <p className="mt-2 text-xs text-muted-foreground">
-                    {project.shootDate}
+                    {formatDate(project.shootDate)}
                   </p>
                 </div>
               ))

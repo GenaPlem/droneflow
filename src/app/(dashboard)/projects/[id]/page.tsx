@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { notFound } from "next/navigation";
 import { PageHeader } from "@/components/shared/page-header";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -33,7 +34,9 @@ export default async function ProjectDetailsPage({
           <div className="flex items-center gap-3">
             <StatusBadge status={project.status} />
             <Button variant="outline">Archive</Button>
-            <Button>Edit Project</Button>
+            <Button asChild>
+              <Link href={`/projects/${project.id}/edit`}>Edit Project</Link>
+            </Button>
           </div>
         }
       />

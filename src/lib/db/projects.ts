@@ -2,6 +2,9 @@ import { prisma } from "@/lib/prisma";
 
 export async function getProjects() {
   return prisma.project.findMany({
+    where: {
+      archived: false,
+    },
     orderBy: { createdAt: "desc" },
     include: {
       shots: true,

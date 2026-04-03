@@ -3,6 +3,7 @@ import { CalendarDays, MapPin } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import type { Project } from "@/types/project";
 import { StatusBadge } from "@/components/projects/status-badge";
+import { formatDate } from "@/lib/utils/format-date";
 
 export function ProjectCard({ project }: { project: Project }) {
   return (
@@ -29,7 +30,7 @@ export function ProjectCard({ project }: { project: Project }) {
 
           <div className="flex items-center gap-2">
             <CalendarDays className="h-4 w-4" />
-            <span>{project.shootDate ?? "Date not set"}</span>
+            <span>{formatDate(project.shootDate)}</span>
           </div>
 
           <div className="flex items-center justify-between pt-2">

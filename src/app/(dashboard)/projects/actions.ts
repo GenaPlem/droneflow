@@ -66,3 +66,14 @@ export async function updateProjectAction(projectId: string, values: unknown) {
 
   redirect(`/projects/${projectId}`);
 }
+
+export async function archiveProjectAction(projectId: string) {
+  await prisma.project.update({
+    where: { id: projectId },
+    data: {
+      archived: true,
+    },
+  });
+
+  redirect("/projects");
+}

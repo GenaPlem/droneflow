@@ -31,6 +31,7 @@ export default async function EditProjectPage({
       <Card className="max-w-2xl">
         <CardContent className="pt-6">
           <ProjectForm
+            submitLabel="Update Project"
             defaultValues={{
               title: project.title,
               location: project.location,

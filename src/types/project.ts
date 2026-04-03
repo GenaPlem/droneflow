@@ -13,17 +13,22 @@ export type Shot = {
   id: string;
   title: string;
   type: ShotType;
-  notes?: string;
+  notes: string | null;
   completed: boolean;
   order: number;
+  projectId?: string;
+  createdAt: Date | string;
+  updatedAt: Date | string;
 };
 
 export type Media = {
   id: string;
   type: MediaType;
   url: string;
-  caption?: string;
+  caption: string | null;
   isBestShot: boolean;
+  projectId?: string;
+  createdAt: Date | string;
 };
 
 export type Project = {
@@ -31,14 +36,14 @@ export type Project = {
   title: string;
   slug: string;
   location: string;
-  shootDate?: string;
-  description?: string;
+  shootDate: Date | string | null;
+  description: string | null;
   status: ProjectStatus;
   featured: boolean;
   isPublic: boolean;
   archived: boolean;
   shots: Shot[];
   media: Media[];
-  createdAt: string;
-  updatedAt: string;
+  createdAt: Date | string;
+  updatedAt: Date | string;
 };

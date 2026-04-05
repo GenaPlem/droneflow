@@ -22,3 +22,16 @@ export async function getProjectById(id: string) {
     },
   });
 }
+
+export async function getArchivedProjects() {
+  return prisma.project.findMany({
+    where: {
+      archived: true,
+    },
+    orderBy: { createdAt: "desc" },
+    include: {
+      shots: true,
+      media: true,
+    },
+  });
+}

@@ -14,12 +14,18 @@ export default async function ProjectsPage() {
         title="Projects"
         description="Track shoot planning, filming, editing, and delivery."
         action={
-          <Button asChild>
-            <Link href="/projects/new">
-              <Plus className="mr-2 h-4 w-4" />
-              New Project
-            </Link>
-          </Button>
+          <div className="flex gap-3">
+            <Button asChild variant="outline">
+              <Link href="/projects/archived">Archived</Link>
+            </Button>
+
+            <Button asChild>
+              <Link href="/projects/new">
+                <Plus className="mr-2 h-4 w-4" />
+                New Project
+              </Link>
+            </Button>
+          </div>
         }
       />
 

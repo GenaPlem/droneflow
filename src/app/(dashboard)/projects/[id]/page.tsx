@@ -6,7 +6,10 @@ import { StatusBadge } from "@/components/projects/status-badge";
 import { Button } from "@/components/ui/button";
 import { getProjectById } from "@/lib/db/projects";
 import { formatDate } from "@/lib/utils/format-date";
-import { ArchiveProjectButton } from "@/components/projects/archive-project-button";
+import {
+  ArchiveProjectButton,
+  RestoreProjectButton,
+} from "@/components/projects/archive-project-button";
 
 type ProjectDetailsPageProps = {
   params: Promise<{
@@ -29,12 +32,24 @@ export default async function ProjectDetailsPage({
     <div className="space-y-10 p-6">
       <PageHeader
         title={project.title}
-        description={`${project.location} • ${formatDate(project.shootDate)}`}
+        description={
+          project.archived
+            ? `${project.location} • ${formatDate(
+                project.shootDate
+              )} • Archived`
+            : `${project.location} • ${formatDate(project.shootDate)}`
+        }
         action={
           <div className="flex items-center gap-3">
             <StatusBadge status={project.status} />
-            <ArchiveProjectButton projectId={project.id} />
-            <Button asChild>
+
+            {project.archived ? (
+              <RestoreProjectButton projectId={project.id} />
+            ) : (
+              <ArchiveProjectButton projectId={project.id} />
+            )}
+
+            <Button asChild className="cursor-pointer">
               <Link href={`/projects/${project.id}/edit`}>Edit Project</Link>
             </Button>
           </div>

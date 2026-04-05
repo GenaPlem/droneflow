@@ -1,7 +1,10 @@
 "use client";
 
 import { useTransition } from "react";
-import { archiveProjectAction } from "@/app/(dashboard)/projects/actions";
+import {
+  archiveProjectAction,
+  restoreProjectAction,
+} from "@/app/(dashboard)/projects/actions";
 import { Button } from "@/components/ui/button";
 
 export function ArchiveProjectButton({ projectId }: { projectId: string }) {
@@ -25,6 +28,25 @@ export function ArchiveProjectButton({ projectId }: { projectId: string }) {
       }}
     >
       {isPending ? "Archiving..." : "Archive"}
+    </Button>
+  );
+}
+
+export function RestoreProjectButton({ projectId }: { projectId: string }) {
+  const [isPending, startTransition] = useTransition();
+
+  return (
+    <Button
+      variant="outline"
+      className="cursor-pointer"
+      disabled={isPending}
+      onClick={() => {
+        startTransition(async () => {
+          await restoreProjectAction(projectId);
+        });
+      }}
+    >
+      {isPending ? "Restoring..." : "Restore"}
     </Button>
   );
 }

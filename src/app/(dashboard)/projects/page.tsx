@@ -3,10 +3,10 @@ import { Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { PageHeader } from "@/components/shared/page-header";
 import { ProjectCard } from "@/components/projects/project-card";
-import { getProjects } from "@/lib/db/projects";
+import { getActiveProjects } from "@/lib/db/projects";
 
 export default async function ProjectsPage() {
-  const projects = await getProjects();
+  const projects = await getActiveProjects();
 
   return (
     <div className="space-y-8 p-6">

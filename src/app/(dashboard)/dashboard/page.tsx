@@ -4,11 +4,11 @@ import { Button } from "@/components/ui/button";
 import { PageHeader } from "@/components/shared/page-header";
 import { StatCard } from "@/components/dashboard/stat-card";
 import { ProjectCard } from "@/components/projects/project-card";
-import { getProjects } from "@/lib/db/projects";
+import { getActiveProjects } from "@/lib/db/projects";
 import { formatDate } from "@/lib/utils/format-date";
 
 export default async function DashboardPage() {
-  const projects = await getProjects();
+  const projects = await getActiveProjects();
 
   const totalProjects = projects.length;
   const readyToShoot = projects.filter(

@@ -1,6 +1,6 @@
 import { prisma } from "@/lib/prisma";
 
-export async function getProjects() {
+export async function getActiveProjects() {
   return prisma.project.findMany({
     where: {
       archived: false,

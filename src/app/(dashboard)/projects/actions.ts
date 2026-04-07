@@ -1,5 +1,6 @@
 "use server";
 
+import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { slugify } from "@/lib/utils/slugify";
@@ -75,6 +76,10 @@ export async function archiveProjectAction(projectId: string) {
     },
   });
 
+  revalidatePath("/projects");
+  revalidatePath("/projects/archived");
+  revalidatePath(`/projects/${projectId}`);
+
   redirect("/projects");
 }
 
@@ -85,6 +90,10 @@ export async function restoreProjectAction(projectId: string) {
       archived: false,
     },
   });
+
+  revalidatePath("/projects");
+  revalidatePath("/projects/archived");
+  revalidatePath(`/projects/${projectId}`);
 
   redirect("/projects");
 }

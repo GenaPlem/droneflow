@@ -1,6 +1,8 @@
 "use client";
 
 import { useTransition } from "react";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 import {
   archiveProjectAction,
   restoreProjectAction,
@@ -20,6 +22,7 @@ import {
 
 export function ArchiveProjectButton({ projectId }: { projectId: string }) {
   const [isPending, startTransition] = useTransition();
+  const router = useRouter();
 
   return (
     <AlertDialog>
@@ -55,7 +58,17 @@ export function ArchiveProjectButton({ projectId }: { projectId: string }) {
               event.preventDefault();
 
               startTransition(async () => {
-                await archiveProjectAction(projectId);
+                try {
+                  await archiveProjectAction(projectId);
+                  toast.success("Project archived", {
+                    description:
+                      "You can find it in the archived projects page.",
+                  });
+                  router.push("/projects");
+                  router.refresh();
+                } catch {
+                  toast.error("Failed to archive project");
+                }
               });
             }}
           >
@@ -69,6 +82,7 @@ export function ArchiveProjectButton({ projectId }: { projectId: string }) {
 
 export function RestoreProjectButton({ projectId }: { projectId: string }) {
   const [isPending, startTransition] = useTransition();
+  const router = useRouter();
 
   return (
     <Button
@@ -78,7 +92,16 @@ export function RestoreProjectButton({ projectId }: { projectId: string }) {
       type="button"
       onClick={() => {
         startTransition(async () => {
-          await restoreProjectAction(projectId);
+          try {
+            await restoreProjectAction(projectId);
+            toast.success("Project restored", {
+              description: "The project is back in the active projects list.",
+            });
+            router.push("/projects");
+            router.refresh();
+          } catch {
+            toast.error("Failed to restore project");
+          }
         });
       }}
     >

@@ -80,7 +80,7 @@ export async function archiveProjectAction(projectId: string) {
   revalidatePath("/projects/archived");
   revalidatePath(`/projects/${projectId}`);
 
-  redirect("/projects");
+  return { success: true };
 }
 
 export async function restoreProjectAction(projectId: string) {
@@ -95,5 +95,5 @@ export async function restoreProjectAction(projectId: string) {
   revalidatePath("/projects/archived");
   revalidatePath(`/projects/${projectId}`);
 
-  redirect("/projects");
+  return { success: true };
 }

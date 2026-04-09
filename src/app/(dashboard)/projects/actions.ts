@@ -1,12 +1,21 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { slugify } from "@/lib/utils/slugify";
+import { z } from "zod";
 import { projectFormSchema } from "@/lib/validations/project";
 
-export async function createProjectAction(values: unknown) {
+type ProjectFormValues = z.infer<typeof projectFormSchema>;
+
+type ProjectActionResult = {
+  success: true;
+  projectId: string;
+};
+
+export async function createProjectAction(
+  values: ProjectFormValues
+): Promise<ProjectActionResult> {
   const parsed = projectFormSchema.safeParse(values);
 
   if (!parsed.success) {
@@ -42,11 +51,15 @@ export async function createProjectAction(values: unknown) {
       userId: user.id,
     },
   });
-
-  redirect(`/projects/${project.id}`);
+  revalidatePath("/projects");
+  revalidatePath(`/projects/${project.id}`);
+  return { success: true, projectId: project.id };
 }
 
-export async function updateProjectAction(projectId: string, values: unknown) {
+export async function updateProjectAction(
+  projectId: string,
+  values: ProjectFormValues
+): Promise<ProjectActionResult> {
   const parsed = projectFormSchema.safeParse(values);
 
   if (!parsed.success) {
@@ -64,8 +77,9 @@ export async function updateProjectAction(projectId: string, values: unknown) {
       shootDate: data.shootDate ? new Date(data.shootDate) : null,
     },
   });
-
-  redirect(`/projects/${projectId}`);
+  revalidatePath("/projects");
+  revalidatePath(`/projects/${projectId}`);
+  return { success: true, projectId };
 }
 
 export async function archiveProjectAction(projectId: string) {

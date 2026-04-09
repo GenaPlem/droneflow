@@ -3,6 +3,8 @@
 import { useTransition } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 import {
   projectFormSchema,
@@ -24,7 +26,10 @@ import { Textarea } from "@/components/ui/textarea";
 type ProjectFormProps = {
   defaultValues?: Partial<ProjectFormValues>;
   submitLabel?: string;
-  onSubmitAction: (values: ProjectFormValues) => Promise<void>;
+  onSubmitAction: (values: ProjectFormValues) => Promise<{
+    success: true;
+    projectId: string;
+  }>;
 };
 
 export function ProjectForm({
@@ -33,6 +38,7 @@ export function ProjectForm({
   onSubmitAction,
 }: ProjectFormProps) {
   const [isPending, startTransition] = useTransition();
+  const router = useRouter();
 
   const form = useForm<ProjectFormValues>({
     resolver: zodResolver(projectFormSchema),
@@ -46,7 +52,33 @@ export function ProjectForm({
 
   function onSubmit(values: ProjectFormValues) {
     startTransition(async () => {
-      await onSubmitAction(values);
+      try {
+        const result = await onSubmitAction(values);
+
+        toast.success(
+          submitLabel === "Create Project" ? "Project created" : "Project updated",
+          {
+            description: (
+              <span className="text-foreground">
+                {submitLabel === "Create Project"
+                  ? "Your new project has been created successfully."
+                  : "Your changes have been saved successfully."}
+              </span>
+            ),
+          }
+        );
+
+        router.push(`/projects/${result.projectId}`);
+        router.refresh();
+      } catch {
+        toast.error("Something went wrong", {
+          description: (
+            <span className="text-foreground">
+              Please try again.
+            </span>
+          ),
+        });
+      }
     });
   }
 

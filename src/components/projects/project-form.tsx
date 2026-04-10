@@ -56,7 +56,9 @@ export function ProjectForm({
         const result = await onSubmitAction(values);
 
         toast.success(
-          submitLabel === "Create Project" ? "Project created" : "Project updated",
+          submitLabel === "Create Project"
+            ? "Project created"
+            : "Project updated",
           {
             description: (
               <span className="text-foreground">
@@ -73,9 +75,7 @@ export function ProjectForm({
       } catch {
         toast.error("Something went wrong", {
           description: (
-            <span className="text-foreground">
-              Please try again.
-            </span>
+            <span className="text-foreground">Please try again.</span>
           ),
         });
       }
@@ -90,9 +90,13 @@ export function ProjectForm({
           name="title"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Title</FormLabel>
+              <FormLabel htmlFor="project-title">Title</FormLabel>
               <FormControl>
-                <Input placeholder="Luxury Villa Shoot" {...field} />
+                <Input
+                  id="project-title"
+                  placeholder="Luxury Villa Shoot"
+                  {...field}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -104,9 +108,13 @@ export function ProjectForm({
           name="location"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Location</FormLabel>
+              <FormLabel htmlFor="project-location">Location</FormLabel>
               <FormControl>
-                <Input placeholder="Dublin, Ireland" {...field} />
+                <Input
+                  id="project-location"
+                  placeholder="Dublin, Ireland"
+                  {...field}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -118,9 +126,13 @@ export function ProjectForm({
           name="description"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Description</FormLabel>
+              <FormLabel htmlFor="project-description">Description</FormLabel>
               <FormControl>
-                <Textarea placeholder="Describe the project..." {...field} />
+                <Textarea
+                  id="project-description"
+                  placeholder="Describe the project..."
+                  {...field}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -132,9 +144,9 @@ export function ProjectForm({
           name="shootDate"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Shoot Date</FormLabel>
+              <FormLabel htmlFor="project-shoot-date">Shoot Date</FormLabel>
               <FormControl>
-                <Input type="date" {...field} />
+                <Input id="project-shoot-date" type="date" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>

@@ -29,6 +29,7 @@ export type Media = {
   isBestShot: boolean;
   projectId?: string;
   createdAt: Date | string;
+  updatedAt: Date | string;
 };
 
 export type Project = {

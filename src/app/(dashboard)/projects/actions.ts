@@ -13,6 +13,35 @@ type ProjectActionResult = {
   projectId: string;
 };
 
+// TEMP: Dev/E2E fallback.
+// Creates a demo user if none exists because auth is not implemented yet.
+// TODO: Replace bootstrap demo user with real authenticated user lookup once auth is implemented.
+async function getProjectOwnerUser() {
+  const existingUser = await prisma.user.findFirst({
+    orderBy: { createdAt: "asc" },
+  });
+
+  if (existingUser) {
+    return existingUser;
+  }
+
+  const allowBootstrapUser =
+    process.env.ALLOW_DEV_BOOTSTRAP_USER === "true" ||
+    process.env.E2E === "true";
+
+  if (!allowBootstrapUser) {
+    throw new Error("No user found for project creation");
+  }
+
+  return prisma.user.create({
+    data: {
+      name: "Demo User",
+      email: "demo@droneflow.local",
+      passwordHash: "dev-only-no-auth-user",
+    },
+  });
+}
+
 export async function createProjectAction(
   values: ProjectFormValues
 ): Promise<ProjectActionResult> {
@@ -33,13 +62,7 @@ export async function createProjectAction(
     counter += 1;
   }
 
-  const user = await prisma.user.findFirst({
-    orderBy: { createdAt: "asc" },
-  });
-
-  if (!user) {
-    throw new Error("No user found for project creation");
-  }
+  const user = await getProjectOwnerUser();
 
   const project = await prisma.project.create({
     data: {

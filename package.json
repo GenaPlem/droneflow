@@ -12,7 +12,9 @@
     "test:e2e:headed": "playwright test --headed",
     "test:e2e:debug": "playwright test --debug",
     "test:e2e:report": "playwright show-report",
-    "dev:test": "dotenv -e .env.test -- next dev --port 3000",
+    "build:test": "dotenv -e .env.test -- next build",
+    "start:test": "dotenv -e .env.test -- next start --port 3001",
+    "dev:test": "dotenv -e .env.test -- next dev --port 3001",
     "prisma:generate": "prisma generate",
     "prisma:push:test": "dotenv -e .env.test -- prisma db push",
     "prisma:migrate:test": "dotenv -e .env.test -- prisma migrate deploy"

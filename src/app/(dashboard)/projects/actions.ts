@@ -37,7 +37,7 @@ async function getProjectOwnerUser() {
     data: {
       name: "Demo User",
       email: "demo@droneflow.local",
-      passwordHash: "dev-only-no-auth-user",
+      supabaseAuthId: "dev-bootstrap-user",
     },
   });
 }

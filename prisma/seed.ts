@@ -16,9 +16,9 @@ async function main() {
     where: { email: "demo@droneflow.com" },
     update: {},
     create: {
+      supabaseAuthId: "demo-supabase-user-id",
       name: "Demo User",
       email: "demo@droneflow.com",
-      passwordHash: "demo", // later replace with real hash
     },
   });
 

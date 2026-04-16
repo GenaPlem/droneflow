@@ -23,14 +23,32 @@ export async function getCurrentDbUser() {
     return null;
   }
 
-  const existingUser = await prisma.user.findUnique({
+  const existingByAuthId = await prisma.user.findUnique({
     where: {
       supabaseAuthId: authUser.id,
     },
   });
 
-  if (existingUser) {
-    return existingUser;
+  if (existingByAuthId) {
+    return existingByAuthId;
+  }
+
+  const existingByEmail = await prisma.user.findUnique({
+    where: {
+      email: authUser.email,
+    },
+  });
+
+  if (existingByEmail) {
+    return prisma.user.update({
+      where: {
+        id: existingByEmail.id,
+      },
+      data: {
+        supabaseAuthId: authUser.id,
+        name: existingByEmail.name ?? authUser.user_metadata?.name ?? null,
+      },
+    });
   }
 
   return prisma.user.create({

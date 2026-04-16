@@ -3,13 +3,32 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 
-export async function signUpAction(formData: FormData) {
+export type AuthActionState = {
+  error?: string;
+  fields?: {
+    name?: string;
+    email?: string;
+  };
+};
+
+export async function signUpAction(
+  _: AuthActionState,
+  formData: FormData
+): Promise<AuthActionState> {
   const email = String(formData.get("email") ?? "").trim();
   const password = String(formData.get("password") ?? "").trim();
   const name = String(formData.get("name") ?? "").trim();
 
+  const fields = {
+    name,
+    email,
+  };
+
   if (!email || !password) {
-    throw new Error("Email and password are required");
+    return {
+      error: "Email and password are required",
+      fields,
+    };
   }
 
   const supabase = await createClient();
@@ -25,18 +44,31 @@ export async function signUpAction(formData: FormData) {
   });
 
   if (error) {
-    throw new Error(error.message);
+    return {
+      error: error.message,
+      fields,
+    };
   }
 
   redirect("/dashboard");
 }
 
-export async function signInAction(formData: FormData) {
+export async function signInAction(
+  _: AuthActionState,
+  formData: FormData
+): Promise<AuthActionState> {
   const email = String(formData.get("email") ?? "").trim();
   const password = String(formData.get("password") ?? "").trim();
 
+  const fields = {
+    email,
+  };
+
   if (!email || !password) {
-    throw new Error("Email and password are required");
+    return {
+      error: "Email and password are required",
+      fields,
+    };
   }
 
   const supabase = await createClient();
@@ -47,7 +79,10 @@ export async function signInAction(formData: FormData) {
   });
 
   if (error) {
-    throw new Error(error.message);
+    return {
+      error: "Invalid email or password",
+      fields,
+    };
   }
 
   redirect("/dashboard");

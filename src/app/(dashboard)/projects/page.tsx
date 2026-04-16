@@ -4,14 +4,9 @@ import { Button } from "@/components/ui/button";
 import { PageHeader } from "@/components/shared/page-header";
 import { ProjectCard } from "@/components/projects/project-card";
 import { getActiveProjects } from "@/lib/db/projects";
-import { getCurrentDbUser } from "@/lib/auth";
 
 export default async function ProjectsPage() {
   const projects = await getActiveProjects();
-
-  const user = await getCurrentDbUser();
-
-  console.log("Current DB user:", user);
 
   return (
     <div className="space-y-8 p-6">

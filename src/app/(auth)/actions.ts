@@ -28,7 +28,7 @@ export async function signUpAction(formData: FormData) {
     throw new Error(error.message);
   }
 
-  redirect("/projects");
+  redirect("/dashboard");
 }
 
 export async function signInAction(formData: FormData) {
@@ -50,7 +50,7 @@ export async function signInAction(formData: FormData) {
     throw new Error(error.message);
   }
 
-  redirect("/projects");
+  redirect("/dashboard");
 }
 
 export async function signOutAction() {

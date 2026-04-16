@@ -21,7 +21,7 @@ export function AccountMenu({ displayName, email, initial }: AccountMenuProps) {
       <DropdownMenuTrigger asChild>
         <button
           type="button"
-          className="flex h-9 w-9 items-center justify-center rounded-full border bg-muted text-sm font-medium transition-colors hover:bg-accent focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
+          className="flex cursor-pointer h-9 w-9 items-center justify-center rounded-full border bg-muted text-sm font-medium transition-colors hover:bg-accent focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
           aria-label="Open account menu"
         >
           {initial}
@@ -45,7 +45,7 @@ export function AccountMenu({ displayName, email, initial }: AccountMenuProps) {
         <form action={signOutAction}>
           <button
             type="submit"
-            className="flex w-full items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors hover:bg-accent hover:text-accent-foreground"
+            className="flex cursor-pointer w-full items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors hover:bg-accent hover:text-accent-foreground"
           >
             Sign out
           </button>

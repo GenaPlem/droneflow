@@ -2,6 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/prisma";
+import { requireCurrentDbUser } from "@/lib/auth";
 import { slugify } from "@/lib/utils/slugify";
 import { z } from "zod";
 import { projectFormSchema } from "@/lib/validations/project";
@@ -13,33 +14,19 @@ type ProjectActionResult = {
   projectId: string;
 };
 
-// TEMP: Dev/E2E fallback.
-// Creates a demo user if none exists because auth is not implemented yet.
-// TODO: Replace bootstrap demo user with real authenticated user lookup once auth is implemented.
-async function getProjectOwnerUser() {
-  const existingUser = await prisma.user.findFirst({
-    orderBy: { createdAt: "asc" },
+async function requireOwnedProject(projectId: string) {
+  const user = await requireCurrentDbUser();
+
+  const project = await prisma.project.findUnique({
+    where: { id: projectId },
+    select: { id: true, userId: true },
   });
 
-  if (existingUser) {
-    return existingUser;
+  if (!project || project.userId !== user.id) {
+    throw new Error("Unauthorized");
   }
 
-  const allowBootstrapUser =
-    process.env.ALLOW_DEV_BOOTSTRAP_USER === "true" ||
-    process.env.E2E === "true";
-
-  if (!allowBootstrapUser) {
-    throw new Error("No user found for project creation");
-  }
-
-  return prisma.user.create({
-    data: {
-      name: "Demo User",
-      email: "demo@droneflow.local",
-      supabaseAuthId: "dev-bootstrap-user",
-    },
-  });
+  return project;
 }
 
 export async function createProjectAction(
@@ -62,7 +49,7 @@ export async function createProjectAction(
     counter += 1;
   }
 
-  const user = await getProjectOwnerUser();
+  const user = await requireCurrentDbUser();
 
   const project = await prisma.project.create({
     data: {
@@ -91,6 +78,8 @@ export async function updateProjectAction(
 
   const data = parsed.data;
 
+  await requireOwnedProject(projectId);
+
   await prisma.project.update({
     where: { id: projectId },
     data: {
@@ -106,6 +95,8 @@ export async function updateProjectAction(
 }
 
 export async function archiveProjectAction(projectId: string) {
+  await requireOwnedProject(projectId);
+
   await prisma.project.update({
     where: { id: projectId },
     data: {
@@ -121,6 +112,8 @@ export async function archiveProjectAction(projectId: string) {
 }
 
 export async function restoreProjectAction(projectId: string) {
+  await requireOwnedProject(projectId);
+
   await prisma.project.update({
     where: { id: projectId },
     data: {

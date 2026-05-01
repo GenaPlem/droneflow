@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { PageHeader } from "@/components/shared/page-header";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { StatusBadge } from "@/components/projects/status-badge";
+import { ProjectStatusSelect } from "@/components/projects/project-status-select";
 import { Button } from "@/components/ui/button";
 import { getProjectById } from "@/lib/db/projects";
 import { formatDate } from "@/lib/utils/format-date";
@@ -40,8 +41,15 @@ export default async function ProjectDetailsPage({
             : `${project.location} • ${formatDate(project.shootDate)}`
         }
         action={
-          <div className="flex items-center gap-3">
-            <StatusBadge status={project.status} />
+          <div className="flex flex-wrap items-center gap-3">
+            {project.archived ? (
+              <StatusBadge status={project.status} />
+            ) : (
+              <ProjectStatusSelect
+                projectId={project.id}
+                currentStatus={project.status}
+              />
+            )}
 
             {project.archived ? (
               <RestoreProjectButton projectId={project.id} />
@@ -49,9 +57,11 @@ export default async function ProjectDetailsPage({
               <ArchiveProjectButton projectId={project.id} />
             )}
 
-            <Button asChild className="cursor-pointer">
-              <Link href={`/projects/${project.id}/edit`}>Edit Project</Link>
-            </Button>
+            {!project.archived ? (
+              <Button asChild className="cursor-pointer">
+                <Link href={`/projects/${project.id}/edit`}>Edit Project</Link>
+              </Button>
+            ) : null}
           </div>
         }
       />

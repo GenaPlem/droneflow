@@ -6,6 +6,7 @@ import { requireCurrentDbUser } from "@/lib/auth";
 import { slugify } from "@/lib/utils/slugify";
 import { z } from "zod";
 import { projectFormSchema } from "@/lib/validations/project";
+import type { ProjectStatus } from "@prisma/client";
 
 type ProjectFormValues = z.infer<typeof projectFormSchema>;
 
@@ -126,4 +127,27 @@ export async function restoreProjectAction(projectId: string) {
   revalidatePath(`/projects/${projectId}`);
 
   return { success: true };
+}
+
+export async function updateProjectStatusAction(
+  projectId: string,
+  status: ProjectStatus
+) {
+  await requireOwnedProject(projectId);
+
+  // if (project.archived) throw new Error(...) # Small adjustment for later
+
+  await prisma.project.update({
+    where: {
+      id: projectId,
+    },
+    data: {
+      status,
+    },
+  });
+
+  revalidatePath("/projects");
+  revalidatePath(`/projects/${projectId}`);
+
+  return { success: true, projectId };
 }

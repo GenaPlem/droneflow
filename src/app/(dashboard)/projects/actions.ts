@@ -20,7 +20,7 @@ async function requireOwnedProject(projectId: string) {
 
   const project = await prisma.project.findUnique({
     where: { id: projectId },
-    select: { id: true, userId: true },
+    select: { id: true, userId: true, archived: true },
   });
 
   if (!project || project.userId !== user.id) {
@@ -133,9 +133,11 @@ export async function updateProjectStatusAction(
   projectId: string,
   status: ProjectStatus
 ) {
-  await requireOwnedProject(projectId);
+  const project = await requireOwnedProject(projectId);
 
-  // if (project.archived) throw new Error(...) # Small adjustment for later
+  if (project.archived) {
+    throw new Error("Archived projects cannot be updated");
+  }
 
   await prisma.project.update({
     where: {

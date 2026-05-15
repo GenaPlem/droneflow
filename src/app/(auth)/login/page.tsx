@@ -1,6 +1,8 @@
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { createClient } from "@/lib/supabase/client";
 import { signInAction, signUpAction, type AuthActionState } from "../actions";
 
 const initialState: AuthActionState = {
@@ -12,6 +14,39 @@ const initialState: AuthActionState = {
 };
 
 export default function LoginPage() {
+  const router = useRouter();
+
+  useEffect(() => {
+    async function handleAuthHash() {
+      const hash = window.location.hash;
+
+      if (!hash.includes("access_token")) return;
+
+      const params = new URLSearchParams(hash.replace("#", ""));
+      const accessToken = params.get("access_token");
+      const refreshToken = params.get("refresh_token");
+
+      if (!accessToken || !refreshToken) return;
+
+      const supabase = createClient();
+
+      const { error } = await supabase.auth.setSession({
+        access_token: accessToken,
+        refresh_token: refreshToken,
+      });
+
+      if (error) {
+        console.error(error);
+        return;
+      }
+
+      router.replace("/dashboard");
+      router.refresh();
+    }
+
+    handleAuthHash();
+  }, [router]);
+
   const [signInState, signInFormAction] = useActionState(
     signInAction,
     initialState
